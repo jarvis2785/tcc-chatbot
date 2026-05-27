@@ -9,23 +9,35 @@ export default function App() {
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
 
+  // Typewriter effect
+  const typeMessage = (text) => {
+    setSykeMessage('');
+    let i = 0;
+    const interval = setInterval(() => {
+      setSykeMessage(text.slice(0, i + 1));
+      i++;
+      if (i >= text.length) clearInterval(interval);
+    }, 30);
+  };
+
   // Opening message — fires once on mount
   useEffect(() => {
     const t = setTimeout(async () => {
-      console.log('Fetching opening message...');
-      const res = await fetch('http://localhost:3001/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: [] }),
-      });
-      const data = await res.json();
-      console.log('Response data:', data);
-      console.log('Keys:', Object.keys(data));
-      const raw = data.reply || '';
-      const expression = (raw.match(/\[EXPRESSION:?\s*(\w+)\]/i) || [])[1] || '';
-      const clean = raw.replace(/\[EXPRESSION:?[^\]]*\]/gi, '').trim();
-      setSykeMessage(clean);
-      setSykeImg(expression.match(/happy|excited/i) ? happyImg : normalImg);
+      try {
+        const res = await fetch('http://localhost:3001/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ messages: [] }),
+        });
+        const data = await res.json();
+        const raw = data.reply || '';
+        const expression = (raw.match(/\[EXPRESSION:?\s*(\w+)\]/i) || [])[1] || '';
+        const clean = raw.replace(/\[.*?\]/g, '').trim();
+        setSykeImg(expression.match(/happy|excited/i) ? happyImg : normalImg);
+        typeMessage(clean);
+      } catch (e) {
+        setSykeMessage('Hey! Something went wrong on my end.');
+      }
     }, 400);
     return () => clearTimeout(t);
   }, []);
@@ -47,10 +59,10 @@ export default function App() {
       const data = await res.json();
       const raw = data.reply || '';
       const expression = (raw.match(/\[EXPRESSION:?\s*(\w+)\]/i) || [])[1] || '';
-      const clean = raw.replace(/\[EXPRESSION:?[^\]]*\]/gi, '').trim();
-      setSykeMessage(clean);
+      const clean = raw.replace(/\[.*?\]/g, '').trim();
       setSykeImg(expression.match(/happy|excited/i) ? happyImg : normalImg);
       setMessages([...newMessages, { role: 'assistant', content: raw }]);
+      typeMessage(clean);
     } catch (e) {
       setSykeMessage('Something went wrong, try again!');
     }
@@ -66,7 +78,7 @@ export default function App() {
       </div>
 
       {/* Cloud + dots */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-end', paddingBottom: '12px' }}>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', paddingBottom: '12px' }}>
         <div style={{ background: '#f5f0e8', borderRadius: '50%', padding: '16px 22px', width: '72vw', boxSizing: 'border-box', fontSize: '12px', lineHeight: '1.6', textAlign: 'center', color: '#1a1a1a', wordBreak: 'break-word', overflowWrap: 'break-word' }}>
           {sykeMessage}
         </div>

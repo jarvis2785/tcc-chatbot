@@ -48,7 +48,7 @@ function detectEmail(text) {
   return m ? m[0].toLowerCase() : null
 }
 
-// Extract lead data using Groq
+// Extract lead data using OpenRouter
 async function extractLeadDataWithGroq(messagesArray) {
   const EXTRACTION_PROMPT = `You are a data extraction assistant. Given this conversation history, extract the following fields and return ONLY a valid JSON object, nothing else:
 
@@ -69,15 +69,11 @@ ${messagesArray.map(m => `${m.role === 'user' ? 'User' : 'Syke'}: ${m.content}`)
   try {
     const completion = await groq.chat.completions.create({
       model: 'llama-3.3-70b-versatile',
-      messages: [
-        { role: 'user', content: EXTRACTION_PROMPT }
-      ],
+      messages: [{ role: 'user', content: EXTRACTION_PROMPT }],
       temperature: 0.3,
       max_tokens: 300,
     })
-
-    const response = completion.choices[0].message.content.trim()
-    const extracted = JSON.parse(response)
+    const extracted = JSON.parse(completion.choices[0].message.content.trim())
     return extracted
   } catch (err) {
     console.error('Lead extraction error:', err.message)
@@ -101,7 +97,6 @@ YOUR PERSONALITY:
 Fun teacher who uses real examples. Brief and sharp — never long, never repetitive. Warm but not cringe. You use humour naturally, not forcefully. You are curious about the person you are talking to. Simple language only — no complex words, no corporate talk.
 
 SPEAKING RULES:
-IMPORTANT: Keep every response under 25 words. Be warm and concise.
 Keep every response under 3 sentences max. Never use bullet points or numbered lists in your replies. Never sound like an AI — no Certainly!, Great question!, I'd be happy to help!. Ask one question at a time, never two. Use the person's name once you know it. Match their energy — if they're casual, be casual. If they're direct, be direct.
 - Vary your response length naturally — sometimes 1 sentence, sometimes 2-3. Never the same length every time. A human texting doesn't always send the same amount of words. Neither do you. Short when it lands better. Longer when it needs more. Feel it out.
 - Never end the conversation yourself. After you have the user's email, ask 'anything else I can help you with?' and keep the conversation open. Only close warmly if the user explicitly says no, bye, done, I'm good, nothing else, or similar. The user decides when the conversation ends, not you.
@@ -152,10 +147,8 @@ app.post('/api/chat', async (req, res) => {
         { role: 'system', content: SYSTEM_PROMPT },
         ...messages,
       ],
-      temperature: 0.8,
-      max_tokens: 300,
+      max_tokens: 200,
     })
-
     const reply = completion.choices[0].message.content
     const response = { reply }
 
