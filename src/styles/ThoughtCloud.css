@@ -1,0 +1,160 @@
+/* ─── Thought Cloud Animations ─────────────────────────────────────────── */
+
+@keyframes cloud-pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes text-cursor-blink {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.4; }
+}
+
+@keyframes dot-pulse {
+  0%, 100% { opacity: 0.25; transform: scale(0.75); }
+  50%      { opacity: 0.8;  transform: scale(1);    }
+}
+
+/* ─── Cloud Anchor ─────────────────────────────────────────────────────── */
+
+.thought-cloud-anchor {
+  position: relative;
+  width: 280px;
+  height: 180px;
+  pointer-events: none;
+}
+
+/* ─── Cloud Bubble — single morphing cloud shape ──────────────────────– */
+
+.cloud-bubble {
+  position: relative;
+  background: #f5f0e8;
+  border-radius: 40% 44% 42% 46% / 38% 42% 44% 40%;
+  padding: 24px;
+  max-width: 260px;
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  animation: cloud-pop-in 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  transform-origin: bottom left;
+}
+
+.cloud-text {
+  font-size: 14px;
+  color: #1a2e1a;
+  line-height: 1.6;
+  font-family: system-ui, -apple-system, sans-serif;
+  margin: 0;
+  text-align: center;
+  word-break: break-word;
+  max-width: 100%;
+  white-space: normal;
+}
+
+.text-cursor {
+  display: inline-block;
+  width: 1.5px;
+  height: 0.9em;
+  background: #1a2e1a;
+  margin-left: 1px;
+  vertical-align: text-bottom;
+  animation: text-cursor-blink 0.8s step-end infinite;
+}
+
+/* ─── Loading Dots ─────────────────────────────────────────────────────– */
+
+.cloud-loading {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  justify-content: center;
+}
+
+.cloud-loading .dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #86a98a;
+  animation: dot-pulse 1.1s ease-in-out infinite;
+}
+
+.cloud-loading .dot:nth-child(2) {
+  animation-delay: 0.18s;
+}
+
+.cloud-loading .dot:nth-child(3) {
+  animation-delay: 0.36s;
+}
+
+/* ─── Trailing Bubbles — toward Syke ───────────────────────────────────– */
+
+.trailing-bubble {
+  position: absolute;
+  border-radius: 50%;
+  background: #f5f0e8;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+/* Smallest bubble */
+.trailing-bubble-1 {
+  width: 8px;
+  height: 8px;
+  top: 100%;
+  left: 15%;
+}
+
+/* Medium bubble */
+.trailing-bubble-2 {
+  width: 13px;
+  height: 13px;
+  top: calc(100% + 20px);
+  left: 5%;
+}
+
+/* Largest bubble */
+.trailing-bubble-3 {
+  width: 18px;
+  height: 18px;
+  top: calc(100% + 45px);
+  left: -5%;
+}
+
+/* ─── Responsive — Mobile (max 768px) ──────────────────────────────────– */
+
+@media (max-width: 768px) {
+  .thought-cloud-anchor {
+    width: auto;
+    height: auto;
+    pointer-events: auto;
+  }
+
+  .cloud-bubble {
+    max-width: 85vw;
+    min-width: 85vw;
+    padding: 20px;
+    min-height: 72px;
+  }
+
+  .cloud-text {
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  .cloud-loading .dot {
+    width: 7px;
+    height: 7px;
+  }
+
+  .trailing-bubble {
+    display: none;
+  }
+}

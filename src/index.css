@@ -1,0 +1,316 @@
+@import "tailwindcss";
+
+/* ─── Reset ───────────────────────────────────────────────────────────────── */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: #0d2818;
+  color: #f5f0e8;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow: hidden;
+}
+
+/* ─── App Layout — Mobile First (390px) ───────────────────────────────────── */
+
+.app-root {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #0d2818;
+  overflow: hidden;
+}
+
+/* ─── Header ───────────────────────────────────────────────────────────────── */
+
+.mobile-header {
+  position: relative;
+  z-index: 100;
+  height: 44px;
+  background: #0d2818;
+  border-bottom: 1px solid rgba(134, 169, 138, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.mobile-header-text {
+  font-size: 16px;
+  color: #f5f0e8;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+}
+
+/* ─── Character Area — Main focus ──────────────────────────────────────────── */
+
+.mobile-character-area {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  overflow: visible;
+  min-height: 0;
+  padding-bottom: 16px;
+}
+
+/* ─── Syke + Cloud Unit — single relative container so they move together ── */
+
+.syke-cloud-unit {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  /* No width: 100% — unit wraps tightly around Syke so top:0 = Syke's head */
+}
+
+/* Make Syke big — width drives size, PNG height follows naturally */
+.syke-cloud-unit .syke-container {
+  width: min(85vw, 320px) !important;
+  height: min(50vh, 360px) !important;
+  transition: none;
+}
+
+/* ─── Thought Cloud — anchored to Syke's head (top-right of unit) ───────── */
+
+.head-cloud {
+  position: absolute;
+  /* Top of unit ≈ top of Syke's head for most portrait PNGs */
+  top: 0;
+  right: 4px;
+  z-index: 50;
+  max-width: 52vw;
+}
+
+.head-cloud .thought-cloud-anchor {
+  width: auto;
+  height: auto;
+}
+
+.head-cloud .cloud-bubble {
+  min-width: auto;
+  max-width: 52vw;
+  padding: 14px 16px;
+  min-height: 56px;
+  box-shadow: none;
+  /* Pointer tail pointing LEFT toward Syke's head */
+  position: relative;
+}
+
+/* Left-pointing tail on the cloud */
+.head-cloud .cloud-bubble::before {
+  content: '';
+  position: absolute;
+  left: -10px;
+  bottom: 24px;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-right: 12px solid #f5f0e8;
+}
+
+.head-cloud .cloud-text {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.head-cloud .trailing-bubble {
+  display: none;
+}
+
+/* ─── User Message History — Bottom Left ───────────────────────────────────– */
+
+.mobile-user-messages {
+  position: absolute;
+  bottom: 65px;
+  left: 12px;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: 50vw;
+}
+
+.mobile-user-chip {
+  font-size: 12px;
+  color: #f5f0e8;
+  border: 1px solid rgba(134, 169, 138, 0.5);
+  border-radius: 12px;
+  padding: 6px 10px;
+  background: transparent;
+  word-break: break-word;
+  max-width: 100%;
+  transition: opacity 0.3s ease;
+}
+
+/* ─── Input Bar — Fixed Bottom ─────────────────────────────────────────────– */
+
+.input-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: auto;
+  padding: 12px 16px;
+  padding-bottom: max(12px, env(safe-area-inset-bottom));
+  z-index: 50;
+  background: #0d2818;
+  border-top: 1px solid rgba(134, 169, 138, 0.12);
+  flex-shrink: 0;
+}
+
+.input-inner {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 8px;
+}
+
+.input-field {
+  flex: 1;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #3d6b47;
+  color: #f5f0e8;
+  font-size: 16px;
+  font-family: inherit;
+  padding: 10px 0;
+  outline: none;
+  caret-color: #f5f0e8;
+  transition: border-color 0.2s ease;
+  -webkit-appearance: none;
+}
+
+.input-field::placeholder { color: #4a7a52; }
+.input-field:focus { border-bottom-color: #86a98a; }
+.input-field:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.send-btn {
+  background: transparent;
+  border: none;
+  color: #86a98a;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 10px;
+  flex-shrink: 0;
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s ease, transform 0.15s ease;
+  -webkit-appearance: none;
+}
+
+.send-btn:disabled { opacity: 0.2; cursor: not-allowed; transform: none; }
+.send-btn:not(:disabled):active { color: #f5f0e8; transform: scale(0.95); }
+
+/* ─── Desktop Layout (900px+) ──────────────────────────────────────────────– */
+
+@media (min-width: 901px) {
+  body { overflow: auto; }
+
+  .app-root {
+    position: relative;
+    overflow: hidden;
+    min-height: 100vh;
+  }
+
+  .mobile-header {
+    display: none;
+  }
+
+  .mobile-character-area {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    flex: none;
+    align-items: center;
+    overflow: visible;
+    padding: 0;
+  }
+
+  /* Desktop: restore Syke to natural size, positioned left */
+  .syke-cloud-unit {
+    position: absolute;
+    left: 20%;
+    top: 15%;
+    width: auto;
+    align-items: flex-start;
+  }
+
+  .syke-cloud-unit .syke-container {
+    width: 200px !important;
+    height: 240px !important;
+  }
+
+  /* Desktop cloud: to the right and higher (natural position) */
+  .head-cloud {
+    position: absolute;
+    bottom: auto;
+    top: -40px;
+    right: -310px;
+    max-width: 280px;
+  }
+
+  .head-cloud .cloud-bubble {
+    max-width: 260px;
+  }
+
+  .head-cloud .cloud-bubble::before {
+    display: none;
+  }
+
+  .mobile-user-messages {
+    position: fixed;
+    bottom: 130px;
+    right: 48px;
+    left: auto;
+    max-width: 200px;
+    gap: 7px;
+    flex-direction: column;
+  }
+
+  .mobile-user-chip {
+    font-size: 13px;
+    border-color: rgba(134, 169, 138, 0.55);
+    text-align: right;
+  }
+
+  .input-bar {
+    position: fixed;
+    bottom: 40px;
+    right: 48px;
+    left: auto;
+    width: 280px;
+    height: auto;
+    padding: 12px 0 14px;
+    border: none;
+  }
+
+  .input-inner { gap: 0; }
+
+  .send-btn:not(:disabled):hover { color: #f5f0e8; transform: translateX(3px); }
+  .send-btn:not(:disabled):active { transform: translateX(3px); }
+}
