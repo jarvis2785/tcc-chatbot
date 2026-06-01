@@ -1,0 +1,17 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"/Users/shaansoni/TCC Chatbot/tcc-syke-chatbot\" && git add . && git diff --cached --quiet || git commit -m \"auto: $(git diff --cached --name-only | head -5 | tr '\\n' ' ' | sed 's/ $//')\" && git push 2>/dev/null || true",
+            "timeout": 30,
+            "statusMessage": "Committing and pushing..."
+          }
+        ]
+      }
+    ]
+  }
+}
