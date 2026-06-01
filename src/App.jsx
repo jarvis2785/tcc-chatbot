@@ -1,6 +1,19 @@
 import { useEffect, useState } from 'react';
-import normalImg from './assets/syke-normal.png';
-import happyImg from './assets/syke-happy.PNG';
+import normalImg       from './assets/syke-normal.png';
+import happyImg        from './assets/syke-happy.PNG';
+import funnyImg        from './assets/syke-funny.png';
+import curiousImg      from './assets/syke-curious.png';
+import appreciativeImg from './assets/syke-appreciative.png';
+
+const resolveExpression = (expr) => {
+  const e = (expr || '').toLowerCase();
+  if (/happy|excited/.test(e))   return happyImg;
+  if (/funny/.test(e))           return funnyImg;
+  if (/curious/.test(e))         return curiousImg;
+  if (/appreciative/.test(e))    return appreciativeImg;
+  return normalImg;
+};
+
 export default function App() {
   const [sykeMessage, setSykeMessage] = useState('...');
   const [sykeImg, setSykeImg] = useState(normalImg);
@@ -36,9 +49,9 @@ export default function App() {
         });
         const data = await res.json();
         const raw = data.reply || '';
-        const expression = (raw.match(/\[EXPRESSION:?\s*(\w+)\]/i) || [])[1] || '';
+        const expression = (raw.match(/\[(\w+)\]/) || [])[1] || '';
         const clean = raw.replace(/\[.*?\]/g, '').trim();
-        setSykeImg(expression.match(/happy|excited/i) ? happyImg : normalImg);
+        setSykeImg(resolveExpression(expression));
         typeMessage(clean);
       } catch (e) {
         setSykeMessage('Hey! Something went wrong on my end.');
@@ -63,9 +76,13 @@ export default function App() {
       });
       const data = await res.json();
       const raw = data.reply || '';
-      const expression = (raw.match(/\[EXPRESSION:?\s*(\w+)\]/i) || [])[1] || '';
+      console.log('[DEBUG] raw API response:', raw);
+      const expression = (raw.match(/\[(\w+)\]/) || [])[1] || '';
+      console.log('[DEBUG] extracted expression:', expression);
+      const img = resolveExpression(expression);
+      console.log('[DEBUG] selected image src:', img);
       const clean = raw.replace(/\[.*?\]/g, '').trim();
-      setSykeImg(expression.match(/happy|excited/i) ? happyImg : normalImg);
+      setSykeImg(img);
       setMessages([...newMessages, { role: 'assistant', content: raw }]);
       typeMessage(clean);
     } catch (e) {
@@ -83,7 +100,9 @@ export default function App() {
       </div>
 
       {/* Syke — independent, fixed */}
-      <img src={sykeImg} style={{ position: 'fixed', bottom: '56px', left: '50%', transform: 'translateX(-50%)', height: '280px', width: 'auto', objectFit: 'contain', zIndex: 1 }} />
+      <div style={{ position: 'fixed', bottom: '56px', left: '50%', transform: 'translateX(-50%)', width: '280px', height: '280px', flexShrink: 0, zIndex: 1 }}>
+        <img src={sykeImg} style={{ width: '100%', height: '100%', objectFit: 'contain', objectPosition: 'center bottom' }} />
+      </div>
 
       {/* Keyframes */}
       <style>{`
@@ -104,7 +123,7 @@ export default function App() {
           0%, 100% { transform: scale(0.85); opacity: 0.6; }
           50%       { transform: scale(1.15); opacity: 1; }
         }
-        input::placeholder { color: rgba(223,221,153,0.55); font-family: "Apple Garamond", Georgia, serif; }
+        input::placeholder { color: rgba(255,254,227,0.45); font-family: "Apple Garamond", Georgia, serif; }
       `}</style>
 
       {/* CSS cartoon cloud + thought dots */}
@@ -209,15 +228,15 @@ export default function App() {
       </div>
 
       {/* Input bar — fixed to bottom */}
-      <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, height: '56px', background: '#0d3831', display: 'flex', alignItems: 'center', padding: '0 12px', gap: '8px' }}>
+      <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, height: '56px', background: '#11453a', borderTop: '1px solid rgba(255,254,227,0.08)', display: 'flex', alignItems: 'center', padding: '0 12px', gap: '8px' }}>
         <input
           value={input}
           onChange={e => setInput(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && sendMessage()}
-          placeholder="say something..."
-          style={{ flex: 1, background: 'transparent', border: 'none', borderBottom: '1px solid #dfdd99', color: '#fffee3', fontSize: '14px', fontFamily: '"Apple Garamond", Georgia, serif', outline: 'none', padding: '4px 0' }}
+          placeholder="talk to syke..."
+          style={{ flex: 1, background: '#1a5c4a', border: '1.5px solid rgba(255,254,227,0.25)', borderRadius: '999px', color: '#fffee3', fontSize: '14px', fontFamily: '"Apple Garamond", Georgia, serif', outline: 'none', padding: '12px 16px' }}
         />
-        <button onClick={sendMessage} style={{ background: 'none', border: 'none', color: '#dfdd99', fontSize: '20px', cursor: 'pointer' }}>→</button>
+        <button onClick={sendMessage} style={{ background: '#fffee3', border: 'none', color: '#11453a', fontSize: '18px', cursor: 'pointer', width: '36px', height: '36px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: '0 0 12px rgba(255,254,227,0.2)' }}>→</button>
       </div>
 
     </div>

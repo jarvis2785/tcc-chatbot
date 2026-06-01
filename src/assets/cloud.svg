@@ -1,0 +1,15 @@
+<svg width="100%" viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <radialGradient id="bump1" cx="40%" cy="35%" r="60%"><stop offset="0%" stop-color="#fffef5"/><stop offset="100%" stop-color="#e8e0c8"/></radialGradient>
+  <radialGradient id="bump2" cx="40%" cy="35%" r="60%"><stop offset="0%" stop-color="#fffef5"/><stop offset="100%" stop-color="#ddd5bc"/></radialGradient>
+  <radialGradient id="mainbody" cx="45%" cy="30%" r="65%"><stop offset="0%" stop-color="#fffef5"/><stop offset="100%" stop-color="#e0d8c0"/></radialGradient>
+</defs>
+<circle cx="160" cy="200" r="70" fill="url(#bump2)" stroke="#c8bfa8" stroke-width="1.5"/>
+<circle cx="260" cy="170" r="88" fill="url(#bump1)" stroke="#c8bfa8" stroke-width="1.5"/>
+<circle cx="370" cy="160" r="95" fill="url(#mainbody)" stroke="#c8bfa8" stroke-width="1.5"/>
+<circle cx="480" cy="172" r="82" fill="url(#bump1)" stroke="#c8bfa8" stroke-width="1.5"/>
+<circle cx="565" cy="195" r="65" fill="url(#bump2)" stroke="#c8bfa8" stroke-width="1.5"/>
+<ellipse cx="370" cy="245" rx="240" ry="55" fill="url(#mainbody)" stroke="#c8bfa8" stroke-width="1.5"/>
+<ellipse cx="340" cy="220" rx="235" ry="50" fill="#faf6e8"/>
+<ellipse cx="370" cy="200" rx="210" ry="60" fill="#faf6e8"/>
+</svg>
