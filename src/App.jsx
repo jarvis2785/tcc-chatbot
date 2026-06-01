@@ -92,7 +92,7 @@ export default function App() {
   };
 
   return (
-    <div style={{ position: 'fixed', inset: 0, background: '#11453a', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+    <div style={{ position: 'fixed', inset: 0, width: '100%', height: '100dvh', background: '#11453a', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
 
       {/* Header */}
       <div style={{ height: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fffee3', fontSize: '16px', fontFamily: '"Apple Garamond", Georgia, serif', letterSpacing: '0.8px', flexShrink: 0 }}>
