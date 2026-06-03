@@ -239,7 +239,7 @@ export default function App() {
       </div>
 
       {/* Input bar — fixed to bottom */}
-      <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, height: '56px', background: '#11453a', borderTop: '1px solid rgba(255,254,227,0.08)', display: 'flex', alignItems: 'center', padding: '0 12px', gap: '8px' }}>
+      <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, height: '56px', background: isEmbed ? 'transparent' : '#11453a', borderTop: isEmbed ? 'none' : '1px solid rgba(255,254,227,0.08)', display: 'flex', alignItems: 'center', padding: '0 12px', gap: '8px' }}>
         <input
           value={input}
           onChange={e => setInput(e.target.value)}
