@@ -21,6 +21,7 @@ export default function App() {
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [cloudKey, setCloudKey] = useState(0);
+  const isEmbed = new URLSearchParams(window.location.search).get('embed') === 'true';
 
   // Re-trigger pop animation each time a new message starts typing
   useEffect(() => {
@@ -92,12 +93,14 @@ export default function App() {
   };
 
   return (
-    <div style={{ position: 'fixed', inset: 0, width: '100%', height: '100dvh', background: '#11453a', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+    <div style={{ position: 'fixed', inset: 0, width: '100%', height: '100dvh', background: isEmbed ? 'transparent' : '#11453a', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
 
-      {/* Header */}
-      <div style={{ height: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fffee3', fontSize: '16px', fontFamily: '"Apple Garamond", Georgia, serif', letterSpacing: '0.8px', flexShrink: 0 }}>
-        Syke ✦ TCC
-      </div>
+      {/* Header — hidden in embed mode */}
+      {!isEmbed && (
+        <div style={{ height: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fffee3', fontSize: '16px', fontFamily: '"Apple Garamond", Georgia, serif', letterSpacing: '0.8px', flexShrink: 0 }}>
+          Syke ✦ TCC
+        </div>
+      )}
 
       {/* Syke — independent, fixed */}
       <div style={{ position: 'fixed', bottom: '56px', left: '50%', transform: 'translateX(-50%)', width: '280px', height: '280px', flexShrink: 0, zIndex: 1 }}>
