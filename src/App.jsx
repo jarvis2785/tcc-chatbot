@@ -23,6 +23,14 @@ export default function App() {
   const [cloudKey, setCloudKey] = useState(0);
   const isEmbed = new URLSearchParams(window.location.search).get('embed') === 'true';
 
+  // Transparent body for embed mode
+  useEffect(() => {
+    if (isEmbed) {
+      document.body.style.background = 'transparent';
+      document.documentElement.style.background = 'transparent';
+    }
+  }, [isEmbed]);
+
   // Re-trigger pop animation each time a new message starts typing
   useEffect(() => {
     if (sykeMessage === '') setCloudKey(k => k + 1);
