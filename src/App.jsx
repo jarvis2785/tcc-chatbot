@@ -112,7 +112,7 @@ export default function App() {
       )}
 
       {/* Syke — independent, fixed */}
-      <div style={{ position: 'fixed', bottom: '56px', left: '50%', transform: 'translateX(-50%)', width: '280px', height: '280px', flexShrink: 0, zIndex: 1 }}>
+      <div style={{ position: 'fixed', bottom: '56px', left: '50%', transform: 'translateX(-50%)', width: isEmbed ? '154px' : '280px', height: isEmbed ? '154px' : '280px', flexShrink: 0, zIndex: 1 }}>
         <img src={sykeImg} style={{ width: '100%', height: '100%', objectFit: 'contain', objectPosition: 'center bottom' }} />
       </div>
 
@@ -243,7 +243,7 @@ export default function App() {
       </div>
 
       {/* Input bar — fixed to bottom */}
-      <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, height: '56px', background: isEmbed ? 'transparent' : '#11453a', borderTop: isEmbed ? 'none' : '1px solid rgba(255,254,227,0.08)', display: 'flex', alignItems: 'center', padding: isEmbed ? '0 8px' : '0 12px', gap: '8px' }}>
+      <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, height: '56px', background: isEmbed ? 'transparent' : '#11453a', backgroundColor: isEmbed ? 'transparent' : '#11453a', borderTop: isEmbed ? 'none' : '1px solid rgba(255,254,227,0.08)', boxShadow: 'none', display: 'flex', alignItems: 'center', padding: isEmbed ? '0 8px' : '0 12px', gap: '8px' }}>
         <input
           value={input}
           onChange={e => setInput(e.target.value)}
