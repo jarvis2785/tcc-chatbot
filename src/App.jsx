@@ -23,13 +23,15 @@ export default function App() {
   const [cloudKey, setCloudKey] = useState(0);
   const isEmbed = new URLSearchParams(window.location.search).get('embed') === 'true';
 
-  // Transparent body for embed mode
+  // Transparent body + signal parent to hide widget in embed mode
   useEffect(() => {
     if (!isEmbed) return;
     document.body.style.background = 'transparent';
     document.body.style.backgroundColor = 'transparent';
     document.documentElement.style.background = 'transparent';
     document.documentElement.style.backgroundColor = 'transparent';
+    // Tell the parent page to hide its floating Syke widget button
+    window.parent.postMessage({ type: 'syke:opened' }, '*');
   }, [isEmbed]);
 
   // Re-trigger pop animation each time a new message starts typing
@@ -112,7 +114,7 @@ export default function App() {
       )}
 
       {/* Syke — independent, fixed */}
-      <div style={{ position: 'fixed', bottom: '56px', left: '50%', transform: 'translateX(-50%)', width: isEmbed ? '154px' : '280px', height: isEmbed ? '154px' : '280px', flexShrink: 0, zIndex: 1 }}>
+      <div style={{ position: 'fixed', bottom: '56px', left: '50%', transform: 'translateX(-50%)', width: '280px', height: '280px', flexShrink: 0, zIndex: 1 }}>
         <img src={sykeImg} style={{ width: '100%', height: '100%', objectFit: 'contain', objectPosition: 'center bottom' }} />
       </div>
 
