@@ -25,10 +25,11 @@ export default function App() {
 
   // Transparent body for embed mode
   useEffect(() => {
-    if (isEmbed) {
-      document.body.style.background = 'transparent';
-      document.documentElement.style.background = 'transparent';
-    }
+    if (!isEmbed) return;
+    document.body.style.background = 'transparent';
+    document.body.style.backgroundColor = 'transparent';
+    document.documentElement.style.background = 'transparent';
+    document.documentElement.style.backgroundColor = 'transparent';
   }, [isEmbed]);
 
   // Re-trigger pop animation each time a new message starts typing
@@ -114,6 +115,9 @@ export default function App() {
       <div style={{ position: 'fixed', bottom: '56px', left: '50%', transform: 'translateX(-50%)', width: '280px', height: '280px', flexShrink: 0, zIndex: 1 }}>
         <img src={sykeImg} style={{ width: '100%', height: '100%', objectFit: 'contain', objectPosition: 'center bottom' }} />
       </div>
+
+      {/* Embed-mode: force body/html transparent at CSS level before JS runs */}
+      {isEmbed && <style>{`html, body { background: transparent !important; background-color: transparent !important; }`}</style>}
 
       {/* Keyframes */}
       <style>{`
@@ -239,7 +243,7 @@ export default function App() {
       </div>
 
       {/* Input bar — fixed to bottom */}
-      <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, height: '56px', background: isEmbed ? 'transparent' : '#11453a', borderTop: isEmbed ? 'none' : '1px solid rgba(255,254,227,0.08)', display: 'flex', alignItems: 'center', padding: '0 12px', gap: '8px' }}>
+      <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, height: '56px', background: isEmbed ? 'transparent' : '#11453a', borderTop: isEmbed ? 'none' : '1px solid rgba(255,254,227,0.08)', display: 'flex', alignItems: 'center', padding: isEmbed ? '0 8px' : '0 12px', gap: '8px' }}>
         <input
           value={input}
           onChange={e => setInput(e.target.value)}
