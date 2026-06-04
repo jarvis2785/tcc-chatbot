@@ -9,8 +9,6 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
-
 // Save lead to Supabase via REST API
 async function saveLead(leadData) {
   const url = `${process.env.VITE_SUPABASE_URL}/rest/v1/leads`
@@ -49,7 +47,7 @@ function detectEmail(text) {
 }
 
 // Extract lead data using OpenRouter
-async function extractLeadDataWithGroq(messagesArray) {
+async function extractLeadDataWithGroq(messagesArray, groq) {
   const EXTRACTION_PROMPT = `You are a data extraction assistant. Given this conversation history, extract the following fields and return ONLY a valid JSON object, nothing else:
 
 {
@@ -114,6 +112,7 @@ EMAIL GATE: Never say goodbye or use closing phrases until an email address appe
 NEVER: mention being an AI, give generic advice, use filler phrases, end conversation before email.`
 
 app.post('/api/chat', async (req, res) => {
+  const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
   const { messages } = req.body
 
   if (!messages || !Array.isArray(messages)) {
@@ -142,7 +141,7 @@ app.post('/api/chat', async (req, res) => {
 
         try {
           // Step 1: Extract lead data using Groq
-          const leadData = await extractLeadDataWithGroq(messages)
+          const leadData = await extractLeadDataWithGroq(messages, groq)
           console.log('[LeadCapture] Extracted data:', leadData)
 
           // Step 2: Save to Supabase
