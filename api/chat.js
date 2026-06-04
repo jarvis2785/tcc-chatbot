@@ -11,11 +11,11 @@ app.use(express.json())
 
 // Save lead to Supabase via REST API
 async function saveLead(leadData) {
-  const url = `${process.env.VITE_SUPABASE_URL}/rest/v1/leads`
+  const url = `${process.env.SUPABASE_URL}/rest/v1/leads`
   const headers = {
     'Content-Type': 'application/json',
-    'apikey': process.env.VITE_SUPABASE_ANON_KEY,
-    'Authorization': `Bearer ${process.env.VITE_SUPABASE_ANON_KEY}`,
+    'apikey': process.env.SUPABASE_ANON_KEY,
+    'Authorization': `Bearer ${process.env.SUPABASE_ANON_KEY}`,
   }
 
   try {
