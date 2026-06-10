@@ -38,6 +38,32 @@ async function saveLead(leadData) {
   }
 }
 
+// Groq chat call with key rotation — tries each key on 429, fails fast on any other error
+async function groqChatCreate(params) {
+  const keys = [
+    process.env.GROQ_API_KEY,
+    process.env.GROQ_API_KEY_2,
+    process.env.GROQ_API_KEY_3,
+    process.env.GROQ_API_KEY_4,
+    process.env.GROQ_API_KEY_5,
+  ].filter(Boolean)
+
+  let lastErr
+  for (const key of keys) {
+    try {
+      return await new Groq({ apiKey: key }).chat.completions.create(params)
+    } catch (err) {
+      if (err.status === 429) {
+        console.warn('[Groq] Key rate limited, trying next')
+        lastErr = err
+        continue
+      }
+      throw err
+    }
+  }
+  throw lastErr || new Error('All Groq API keys exhausted')
+}
+
 // Email detection regex
 const EMAIL_RE = /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i
 
@@ -47,7 +73,7 @@ function detectEmail(text) {
 }
 
 // Extract lead data using OpenRouter
-async function extractLeadDataWithGroq(messagesArray, groq) {
+async function extractLeadDataWithGroq(messagesArray) {
   const EXTRACTION_PROMPT = `You are a data extraction assistant. Given this conversation history, extract the following fields and return ONLY a valid JSON object, nothing else:
 
 {
@@ -65,7 +91,7 @@ Conversation history:
 ${messagesArray.map(m => `${m.role === 'user' ? 'User' : 'Syke'}: ${m.content}`).join('\n')}`
 
   try {
-    const completion = await groq.chat.completions.create({
+    const completion = await groqChatCreate({
       model: 'llama-3.3-70b-versatile',
       messages: [{ role: 'user', content: EXTRACTION_PROMPT }],
       temperature: 0.3,
@@ -112,7 +138,6 @@ EMAIL GATE: Never say goodbye or use closing phrases until an email address appe
 NEVER: mention being an AI, give generic advice, use filler phrases, end conversation before email.`
 
 app.post('/api/chat', async (req, res) => {
-  const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
   const { messages } = req.body
 
   if (!messages || !Array.isArray(messages)) {
@@ -121,7 +146,7 @@ app.post('/api/chat', async (req, res) => {
 
   try {
     // Get chat reply
-    const completion = await groq.chat.completions.create({
+    const completion = await groqChatCreate({
       model: 'llama-3.3-70b-versatile',
       messages: [
         { role: 'system', content: SYSTEM_PROMPT },
@@ -141,7 +166,7 @@ app.post('/api/chat', async (req, res) => {
 
         try {
           // Step 1: Extract lead data using Groq
-          const leadData = await extractLeadDataWithGroq(messages, groq)
+          const leadData = await extractLeadDataWithGroq(messages)
           console.log('[LeadCapture] Extracted data:', leadData)
 
           // Step 2: Save to Supabase
