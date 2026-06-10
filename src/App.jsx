@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import normalImg       from './assets/syke-normal.png';
 import happyImg        from './assets/syke-happy.PNG';
 import funnyImg        from './assets/syke-funny.png';
@@ -22,6 +22,11 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [cloudKey, setCloudKey] = useState(0);
   const isEmbed = new URLSearchParams(window.location.search).get('embed') === 'true';
+  const sessionId = useRef(
+    (typeof crypto !== 'undefined' && crypto.randomUUID)
+      ? crypto.randomUUID()
+      : `${Date.now()}-${Math.random().toString(36).slice(2)}`
+  );
 
   // Transparent body + signal parent to hide widget in embed mode
   useEffect(() => {
@@ -57,7 +62,7 @@ export default function App() {
         const res = await fetch('/api/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ messages: [] }),
+          body: JSON.stringify({ messages: [], session_id: sessionId.current }),
         });
         const data = await res.json();
         const raw = data.reply || '';
@@ -84,7 +89,7 @@ export default function App() {
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: newMessages }),
+        body: JSON.stringify({ messages: newMessages, session_id: sessionId.current }),
       });
       const data = await res.json();
       const raw = data.reply || '';
